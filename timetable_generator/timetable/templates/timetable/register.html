@@ -1,0 +1,14 @@
+{% extends 'timetable/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="height: 80vh;">
+    <div class="card p-4 shadow-lg" style="width: 100%; max-width: 400px; background-color: rgba(56, 60, 68, 0.8); color: white;">
+        <h2 class="text-center mb-4">Register</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success btn-block mt-3">Register</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

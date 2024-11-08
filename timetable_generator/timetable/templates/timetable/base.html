@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timetable Generator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url("{% static 'images/back.png' %}") no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            margin: 0;
+            color: white;
+        }
+        nav.navbar {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        footer {
+    text-align: center;
+    padding: 15px 0;
+    background-color: rgba(56, 60, 68, 0.5); /* Dimmed #383c44 with 50% opacity */
+    color: #d3d3d3; /* Light gray text color for good contrast */
+    font-style: italic;
+    font-size: 0.9rem;
+    width: 100%;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3); /* Soft shadow above the footer */
+    margin-top: 20px;
+}
+
+        footer a {
+            color: #1e90ff; /* Cool blue color for hover links */
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/">Timetable Generator</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+                {% if user.is_authenticated %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'timetable-home' %}">Home</a></li>
+                <li class="nav-item">
+                    <form action="{% url 'logout' %}" method="POST" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link btn btn-link">Logout</button>
+                    </form>
+                </li>
+                {% else %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        {% block content %}{% endblock %}
+    </div>
+    <footer>
+        By <a href="#">Najaf</a>, <a href="#">Mudassir</a>, <a href="#">Rauf</a>, <a href="#">Ahsan</a>, and <a href="#">Umar</a>
+    </footer>
+</body>
+</html>

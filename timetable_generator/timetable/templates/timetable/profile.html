@@ -1,0 +1,38 @@
+{% extends 'timetable/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="height: 80vh;">
+    <div class="card p-5 shadow-lg" style="width: 100%; max-width: 500px; background-color: rgba(56, 60, 68, 0.8); color: whitesmoke;">
+        <h2 class="animated-text text-center mb-4" style="font-weight: bold;">Welcome, {{ user.username }}!</h2>
+        <p class="lead text-center" style="color: #c0c0c0;">Here is some of your information:</p>
+        <p class="text-center" style="color: rgba(0, 149, 226, 1);"><strong>Email:</strong> {{ user.email }}</p>
+    </div>
+</div>
+{% endblock %}
+
+<style>
+    /* Darken the background image */
+    body {
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/path/to/your/background.jpg') no-repeat center center fixed;
+        background-size: cover;
+    }
+
+    /* Animation and container styles */
+    .animated-text {
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+        animation: fadeInText 2s forwards;
+    }
+
+    @keyframes fadeInText {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+</style>
+
+<script>
+    // Use JavaScript to add a 'visible' class once the content is loaded
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelector(".animated-text").classList.add("visible");
+    });
+</script>

@@ -1,0 +1,25 @@
+{% extends 'timetable/base.html' %}
+
+{% block content %}
+<h2>Add Subject</h2>
+<form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="name">Subject Name</label>
+        <input type="text" class="form-control" name="name" required>
+    </div>
+    <div class="form-group">
+        <label for="department">Department</label>
+        <input type="text" class="form-control" name="department" required>
+    </div>
+    <div class="form-group">
+        <label for="professor">Select Professor</label>
+        <select class="form-control" name="professor" required>
+            {% for professor in professors %}
+            <option value="{{ professor.id }}">{{ professor.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-success">Add Subject</button>
+</form>
+{% endblock %}

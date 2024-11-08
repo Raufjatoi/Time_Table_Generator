@@ -1,0 +1,58 @@
+{% extends 'timetable/base.html' %}
+
+{% block content %}
+<h2>Timetable</h2>
+<div class="btn-group" role="group" aria-label="Timetable Actions">
+    <a href="{% url 'add-professor' %}" class="btn btn-primary">Add Professor</a>
+    <a href="{% url 'add-subject' %}" class="btn btn-primary">Add Subject</a>
+    <a href="{% url 'add-time-slot' %}" class="btn btn-primary">Add Time Slot</a>
+</div>
+
+<h3>Subjects</h3>
+<table class="table table-dark">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Department</th>
+            <th>Professor</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for subject in subjects %}
+        <tr>
+            <td>{{ subject.name }}</td>
+            <td>{{ subject.department.name }}</td>  <!-- Updated to access the department name -->
+            <td>{{ subject.professor.user.username }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">No subjects available.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>Time Slots</h3>
+<table class="table table-dark">
+    <thead>
+        <tr>
+            <th>Day</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for slot in time_slots %}
+        <tr>
+            <td>{{ slot.day }}</td>
+            <td>{{ slot.start_time }}</td>
+            <td>{{ slot.end_time }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">No time slots available.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

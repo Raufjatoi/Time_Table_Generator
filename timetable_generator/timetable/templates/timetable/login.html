@@ -1,0 +1,21 @@
+{% extends 'timetable/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="height: 80vh;">
+    <div class="card p-4 shadow-lg" style="width: 100%; max-width: 400px; background-color: rgba(56, 60, 68, 0.8); color: white;">
+        <h2 class="text-center mb-4">Login</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block mt-3">Login</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

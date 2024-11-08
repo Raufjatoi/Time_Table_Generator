@@ -1,0 +1,25 @@
+{% extends 'timetable/base.html' %}
+
+{% block content %}
+<h2>Add Professor</h2>
+<form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="name">Professor Name</label>
+        <input type="text" class="form-control" name="name" required>
+    </div>
+    <div class="form-group">
+        <label for="department">Department</label>
+        <input type="text" class="form-control" name="department" required>
+    </div>
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" class="form-control" name="username" required>
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" name="password" required>
+    </div>
+    <button type="submit" class="btn btn-success">Add Professor</button>
+</form>
+{% endblock %}
