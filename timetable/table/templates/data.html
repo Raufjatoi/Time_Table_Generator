@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1> Time Table Generator </h1>
+<h2> Data </h2>
+
+<h5> Add all the data once and then generate the table you can always again add the data </h5>
+
+<form method="POST">
+    {% csrf_token %}
+    <label for="subject">Subject</label>
+    <input type="text" name="subject" id="subject" required>
+    <br>
+    <label for="teacher">Teacher</label>
+    <input type="text" name="teacher" id="teacher" required>
+    <br>
+    <label for="room">Room</label>
+    <input type="text" name="room" id="room" required>
+    <br>
+    <label for="time">Time</label>
+    <input type="text" name="time" id="time" required>
+    <br>
+    <label for="day">Day</label>
+    <input type="text" name="day" id="day" required>
+    <br>
+    <button type="submit">Add</button>
+
+
+
+{% endblock %}
