@@ -42,7 +42,7 @@ def profile(request):
 
 @login_required
 def data(request):
-    forms = DepartmentForm() , TeacherForm() , SubjectForm() , SubjectGroupForm() , SubjectGroupMappingForm() , DayForm()
+    forms = [DepartmentForm() , TeacherForm() , SubjectForm() , SubjectGroupForm() , SubjectGroupMappingForm() , DayForm()]
     return render(request , 'data.html' , {'forms': forms})
 
 @login_required
