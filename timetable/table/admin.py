@@ -1,10 +1,7 @@
 from django.contrib import admin
-
-from .models import Teacher, Subject, SubjectGroup, SubjectGroupMapping, Department, Day
+from .models import Teacher, Subject, Department, Timeslot
 
 admin.site.register(Teacher)
 admin.site.register(Subject)
-admin.site.register(SubjectGroup)
-admin.site.register(SubjectGroupMapping)
 admin.site.register(Department)
-admin.site.register(Day)
+admin.site.register(Timeslot)

@@ -1,100 +1,66 @@
 from django.db import models
 
-# teacher model that stores teacher details
+
 class Teacher(models.Model):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    specialization = models.TextField()
-    email = models.EmailField(blank=True, null=True)
-    phone = models.CharField(max_length=15, blank=True, null=True)
-
-    def __str__(self):
-        return f"{self.first_name} {self.last_name}"
-
-# subject group model that stores subject group details like the 1st year, 2nd year, etc.
-class SubjectGroup(models.Model):
     name = models.CharField(max_length=100)
+    working_hours = models.CharField(max_length=100)  # working hours per day
+    subjects = models.ManyToManyField('Subject', related_name='assigned_teachers')
 
     def __str__(self):
         return self.name
 
-# subject model that stores subject details
+
 class Subject(models.Model):
-    MAJOR = 'Major'
-    MINOR = 'Minor'
-    SUBJECT_TYPES = [
-        (MAJOR, 'Major'),
-        (MINOR, 'Minor'),
-    ]
-
-    name = models.CharField(max_length=50)
-    type = models.CharField(max_length=10, choices=SUBJECT_TYPES)
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='subjects')
+    name = models.CharField(max_length=100)
+    lectures_per_week = models.PositiveIntegerField()  #lectures per week
+    duration_per_lecture = models.PositiveIntegerField()  # duration of lecture
+    is_major = models.BooleanField(default=False)  # major or minor ??
 
     def __str__(self):
         return self.name
 
-# this model is used to map the subjects to the subject groups
-class SubjectGroupMapping(models.Model):
-    group = models.ForeignKey(SubjectGroup, on_delete=models.CASCADE, related_name='subjects')
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='groups')
 
-    class Meta:
-        unique_together = ('group', 'subject')
+class Timeslot(models.Model):
+    day = models.CharField(max_length=10, choices=[
+        ('Monday', 'Monday'), ('Tuesday', 'Tuesday'),
+        ('Wednesday', 'Wednesday'), ('Thursday', 'Thursday'),
+        ('Friday', 'Friday')
+    ])
+    start_time = models.TimeField()
+    end_time = models.TimeField()
 
-# department model that stores department details like the department name, short name, year, major subjects, and minor subjects
+    def __str__(self):
+        return f"{self.day} {self.start_time.strftime('%H:%M')} - {self.end_time.strftime('%H:%M')}"
+
+
 class Department(models.Model):
-    full_name = models.CharField(max_length=100)
-    short_name = models.CharField(max_length=20)
-    year = models.IntegerField()
-    major_subjects = models.ForeignKey(
-        SubjectGroup, on_delete=models.SET_NULL, null=True, related_name='major_departments'
-    )
-    minor_subjects = models.ForeignKey(
-        SubjectGroup, on_delete=models.SET_NULL, null=True, related_name='minor_departments'
-    )
+    name = models.CharField(max_length=100)
+    year = models.CharField(max_length=100)  # 1st, 2nd, 3rd, or final year
+    teachers = models.ManyToManyField(Teacher)  # dept can have many teachers
+    major_subjects = models.ManyToManyField(Subject, related_name='major_in_departments', limit_choices_to={'is_major': True})
+    minor_subjects = models.ManyToManyField(Subject, related_name='minor_in_departments', limit_choices_to={'is_major': False})
+    total_lectures_per_week = models.PositiveIntegerField()
+    start_time = models.TimeField()  #dept starting time
+    end_time = models.TimeField()  # dept closing time
 
     def __str__(self):
-        return f"{self.full_name} ({self.short_name})"
-
-class Day(models.Model):
-    day_name = models.CharField(max_length=20)
-
-    def __str__(self):
-        return self.day_name
+        return f"{self.name} - {self.year} Year"
 
 
-class TimeSlot(models.Model):
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-
-    def __str__(self):
-        return f"{self.start_time} - {self.end_time}"
-
-
-class Break(models.Model):
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    day = models.ForeignKey(Day, on_delete=models.CASCADE, related_name='breaks')
-    department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='breaks')
+class TimeTable(models.Model):
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    timeslot = models.ForeignKey(Timeslot, on_delete=models.CASCADE)  # each subject can have multiple time slots
+    year_group = models.CharField(max_length=20, choices=[
+        ('1st Year', '1st Year'),
+        ('2nd Year', '2nd Year'),
+        ('3rd Year', '3rd Year'),
+        ('4th Year', '4th Year'), # final year 
+        ('Final Year', 'Final Year') # or this
+    ])
 
     def __str__(self):
-        return f"{self.day.day_name}: {self.start_time} - {self.end_time}"
-
-# this will generate like the time table hope so it will be useful for us
-class Schedule(models.Model):
-    day = models.ForeignKey(Day, on_delete=models.CASCADE, related_name='schedules')
-    time_slot = models.ForeignKey(TimeSlot, on_delete=models.CASCADE, related_name='schedules')
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='schedules')
-    department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='schedules')
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='schedules')
-    room_number = models.CharField(max_length=20, blank=True, null=True)
+        return f"{self.department.name} - {self.subject.name} ({self.year_group}) - {self.timeslot}"
 
     class Meta:
-        unique_together = [
-            ('day', 'time_slot', 'teacher'),
-            ('day', 'time_slot', 'department'),
-        ]
-
-    def __str__(self):
-        return f"{self.day.day_name}, {self.time_slot}: {self.subject.name}"
+        unique_together = ('department', 'subject', 'timeslot', 'year_group')

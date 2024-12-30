@@ -1,7 +1,6 @@
 from django import forms 
 from django.contrib.auth.models import User
-from .models import Teacher, Subject, SubjectGroup, SubjectGroupMapping, Department, Day , Break
-
+from .models import Teacher, Subject, Department, Timeslot
 
 class UserRegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
@@ -17,34 +16,19 @@ class UserLoginForm(forms.Form):
 class TeacherForm(forms.ModelForm):
     class Meta:
         model = Teacher
-        fields = ['first_name', 'last_name', 'specialization', 'email', 'phone']
+        fields = '__all__'
 
 class SubjectForm(forms.ModelForm):
     class Meta:
         model = Subject
-        fields = ['name', 'teacher' , 'type']
-
-class SubjectGroupForm(forms.ModelForm):
-    class Meta:
-        model = SubjectGroup
-        fields = ['name']
-
-class SubjectGroupMappingForm(forms.ModelForm):
-    class Meta:
-        model = SubjectGroupMapping
-        fields = ['group', 'subject']
+        fields = '__all__'
 
 class DepartmentForm(forms.ModelForm):
     class Meta:
         model = Department
-        fields = ['full_name', 'short_name', 'year', 'major_subjects', 'minor_subjects']
+        fields = '__all__'
 
-class DayForm(forms.ModelForm):
+class TimeslotForm(forms.ModelForm):
     class Meta:
-        model = Day
-        fields = ['day_name']
-    
-class BreakForm(forms.ModelForm):
-    class Meta:
-        model = Break
-        fields = ['start_time', 'end_time']
+        model = Timeslot
+        fields = '__all__'

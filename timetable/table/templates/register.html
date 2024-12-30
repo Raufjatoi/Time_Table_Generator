@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<h1> Time Table Generator </h1>
 <h2> Register </h2>
+{% if error %}
+    <div class="error">{{ error }}</div>
+{% endif %}
 <form method = "POST">
     {% csrf_token %}
     {{ form.as_p}}

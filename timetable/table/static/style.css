@@ -1,0 +1,114 @@
+
+p.profile, p.merge {
+    border-radius: 10px;
+    border: 0.5px solid lightpink;
+}
+#footer {
+    background-color: black;
+    color: white;
+    padding: 2px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+#edges {
+    border-radius: 10px;
+    border: 2px solid skyblue;
+}
+.simple.navbar {
+    background-color: black;
+    color: white;
+    padding: 2px;
+    text-align: center;
+}
+.error { 
+    color: red;
+}
+a {
+    text-transform: capitalize;
+}
+body {
+    background-color: black;
+    color: gray;
+    text-align: center;
+}
+h2 {
+    color: white;
+}
+h5.h {
+    border-radius: 10px;
+    border: 0.5px solid lightpink;
+    color: #da3682;
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+#capitalize {
+    text-transform: capitalize;
+}
+
+.button{
+    border-radius: 10px;
+    border: 5px solid lightpink;
+    background-color: black;
+    color: #da3682;
+  }
+  .button:hover{
+    border-radius: 10px;
+    border: 5px solid skyblue;
+    background-color: black;
+    color:#007bff;
+  }
+.form-heading {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color:#da3682;
+}
+
+.form-section {
+    border-radius: 10px;
+    background-color: black; 
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    border: 0.5px solid #ffb6c1; /* Sky Pink Border */
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="number"],
+form input[type="time"],
+form input[type="password"],
+
+form select,
+form textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 2px solid #ffb6c1; 
+  border-radius: 10px;
+  font-size: 1rem;
+  background-color: black;
+  color: pink;
+}
+
+button[type="submit"] {
+  border-radius: 10px;
+  border: 5px solid lightpink;
+  background-color: black;
+  color: #da3682;
+}
+
+button[type="submit"]:hover { 
+    border-radius: 10px;
+    border: 5px solid skyblue;
+    background-color: black;
+    color:#007bff;
+}

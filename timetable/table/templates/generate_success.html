@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Time Table Generator</h1>
+<h2> Generated </h2>
+  <p style="color: green;">Timetable Generated Successfully 😊</p>
+  <ul>
+    {% for entry in timetable %}
+      <li>{{ entry.subject.name }} - {{ entry.timeslot.start_time }} to {{ entry.timeslot.end_time }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
