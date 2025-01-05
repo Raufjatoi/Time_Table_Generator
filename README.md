@@ -21,10 +21,10 @@
 ![Diagram](https://github.com/Raufjatoi/Time_Table_Generator/blob/main/ER_Diagram_D.png)
 
 > [!NOTE] 
-> **Features**:  
-> Nice User Interface 
-> SQLite Database for data 
-> other are in work 
+> **Features**:     
+> - Nice User Interface             
+> - SQLite Database for data       
+> - Other are in work        
 
 ---
 
