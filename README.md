@@ -20,7 +20,7 @@
 ## ER Diagram 
 ![Diagram](https://github.com/Raufjatoi/Time_Table_Generator/blob/main/ER_Diagram_D.png)
 
-> [!INFO] 
+> [!NOTE] 
 > **Features**:  
 > Nice User Interface 
 > SQLite Database for data 
