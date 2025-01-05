@@ -8,9 +8,12 @@
 > [!IMPORTANT]  
 > **Add env file**:  
 > I didn’t add the environment file, so you should create your own. It’s good practice to keep all dependencies isolated within a project-specific environment. You can create one like this:  
-> ```bash  
-> python -m venv env  
-> ./env/scripts/activate  
+> ```bash
+> #create env file 
+> python -m venv env
+> # activate it 
+> ./env/scripts/activate
+> # and finally after done deactivate 
 > deactivate  
 > ```  
 
