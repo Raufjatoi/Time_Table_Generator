@@ -15,7 +15,16 @@
 > ./env/scripts/activate
 > # and finally after done deactivate 
 > deactivate  
-> ```  
+> ```
+
+## ER Diagram 
+![Diagram](https://github.com/Raufjatoi/Time_Table_Generator/blob/main/ER_Diagram_D.png)
+
+> [!INFO] 
+> **Features**:  
+> Nice User Interface 
+> SQLite Database for data 
+> other are in work 
 
 ---
 
