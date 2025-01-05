@@ -1,11 +1,28 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Time Table Generator</h1>
-<h2> Generated </h2>
-  <p style="color: green;">Timetable Generated Successfully 😊</p>
-  <ul>
+<h1 style="text-align: center;">Time Table Generator</h1>
+<h2 style="text-align: center;">Generated Timetable</h2>
+<p style="color: green; text-align: center;">Timetable Generated Successfully 😊</p>
+<div style="display: flex; justify-content: center;">
+<table border="1">
+  <thead>
+    <tr>
+      <th>Department</th>
+      <th>Subject</th>
+      <th>Timeslot</th>
+      <th>Teacher</th>
+    </tr>
+  </thead>
+  <tbody>
     {% for entry in timetable %}
-      <li>{{ entry.subject.name }} - {{ entry.timeslot.start_time }} to {{ entry.timeslot.end_time }}</li>
+      <tr>
+        <td>{{ entry.department.name }}</td>
+        <td>{{ entry.subject.name }}</td>
+        <td>{{ entry.timeslot.start_time }} to {{ entry.timeslot.end_time }}</td>
+        <td>{{ entry.teacher.name }}</td>
+      </tr>
     {% endfor %}
-  </ul>
+  </tbody>
+</table>
+</div>
 {% endblock %}

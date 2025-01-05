@@ -112,3 +112,7 @@ button[type="submit"]:hover {
     background-color: black;
     color:#007bff;
 }
+
+br.space {
+    margin-top: 15px;
+}

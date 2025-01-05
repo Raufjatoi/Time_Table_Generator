@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+  label {
+    color: gray;
+  }
+  input {
+    background-color: black;
+    color: pink;
+    border: 1px solid pink;
+    border-radius: 10px;
+  }
+  button {
+    background-color: pink;
+    color: black;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+</style>
+
+<h1>Time Table Generator</h1>
+<h2>Add TimeSlot</h2>
+
+{% if success %}
+  <p style="color: green;">{{ success }}</p>
+{% endif %}
+{% if error %}
+  <p style="color: red;">{{ error }}</p>
+{% endif %}
+
+<div class="form-section">
+  <form method="post" action="{% url 'add_timeslot' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add</button>
+  </form>
+</div>
+{% endblock %}

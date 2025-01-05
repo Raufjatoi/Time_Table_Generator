@@ -1,66 +1,92 @@
 from django.db import models
 
+TIME_SLOTS = [
+    ('8:30 - 9:30', '8:30 - 9:30'),
+    ('9:30 - 10:30', '9:30 - 10:30'),
+    ('11:00 - 12:00', '11:00 - 12:00'),
+    ('12:00 - 1:00', '12:00 - 1:00'),
+    ('1:00 - 2:00', '1:00 - 2:00'),
+    ('2:00 - 3:00', '2:00 - 3:00'),
+    ('3:00 - 4:00', '3:00 - 4:00'),
+    ('4:00 - 5:00', '4:00 - 5:00'),
+]
 
-class Teacher(models.Model):
-    name = models.CharField(max_length=100)
-    working_hours = models.CharField(max_length=100)  # working hours per day
-    subjects = models.ManyToManyField('Subject', related_name='assigned_teachers')
+DAYS_OF_WEEK = [
+    ('Monday', 'Monday'),
+    ('Tuesday', 'Tuesday'),
+    ('Wednesday', 'Wednesday'),
+    ('Thursday', 'Thursday'),
+    ('Friday', 'Friday'),
+]
+
+YEAR_GROUPS = [
+    ('1st Year', '1st Year'),
+    ('2nd Year', '2nd Year'),
+    ('3rd Year', '3rd Year'),
+    ('4th Year', '4th Year'),
+    ('Final Year', 'Final Year'),
+]
+
+SEMESTERS = [
+    ('1st Semester', '1st Semester'),
+    ('2nd Semester', '2nd Semester'),
+    ('3rd Semester', '3rd Semester'),
+    ('4th Semester', '4th Semester'),
+    ('5th Semester', '5th Semester'),
+    ('6th Semester', '6th Semester'),
+    ('7th Semester', '7th Semester'),
+    ('8th Semester', '8th Semester'),
+]
+
+class Timeslot(models.Model):
+    day = models.CharField(max_length=10, choices=DAYS_OF_WEEK)
+    start_time = models.CharField(max_length=20, choices=TIME_SLOTS, default='8:30 - 9:30')
+    end_time = models.CharField(max_length=20, choices=TIME_SLOTS, default='1:00 - 2:00')
 
     def __str__(self):
-        return self.name
-
+        return f"{self.day} - {self.start_time}"
 
 class Subject(models.Model):
     name = models.CharField(max_length=100)
-    lectures_per_week = models.PositiveIntegerField()  #lectures per week
-    duration_per_lecture = models.PositiveIntegerField()  # duration of lecture
-    is_major = models.BooleanField(default=False)  # major or minor ??
+    lectures_per_week = models.PositiveIntegerField()
+    duration_per_lecture = models.PositiveIntegerField()
+    is_major = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
 
-
-class Timeslot(models.Model):
-    day = models.CharField(max_length=10, choices=[
-        ('Monday', 'Monday'), ('Tuesday', 'Tuesday'),
-        ('Wednesday', 'Wednesday'), ('Thursday', 'Thursday'),
-        ('Friday', 'Friday')
-    ])
-    start_time = models.TimeField()
-    end_time = models.TimeField()
+class Teacher(models.Model):
+    name = models.CharField(max_length=100)
+    working_hours = models.CharField(max_length=20, choices=TIME_SLOTS)
+    available_time_slots = models.ManyToManyField(Timeslot, related_name='available_teachers')
+    subjects = models.ManyToManyField(Subject, related_name='assigned_teachers')
 
     def __str__(self):
-        return f"{self.day} {self.start_time.strftime('%H:%M')} - {self.end_time.strftime('%H:%M')}"
-
+        return self.name
 
 class Department(models.Model):
     name = models.CharField(max_length=100)
-    year = models.CharField(max_length=100)  # 1st, 2nd, 3rd, or final year
-    teachers = models.ManyToManyField(Teacher)  # dept can have many teachers
+    year = models.CharField(max_length=20, choices=YEAR_GROUPS)
+    semester = models.CharField(max_length=20, choices=SEMESTERS)
+    teachers = models.ManyToManyField(Teacher)
     major_subjects = models.ManyToManyField(Subject, related_name='major_in_departments', limit_choices_to={'is_major': True})
     minor_subjects = models.ManyToManyField(Subject, related_name='minor_in_departments', limit_choices_to={'is_major': False})
     total_lectures_per_week = models.PositiveIntegerField()
-    start_time = models.TimeField()  #dept starting time
-    end_time = models.TimeField()  # dept closing time
+    start_time = models.CharField(max_length=20, choices=TIME_SLOTS, default='8:30 - 9:30')
+    end_time = models.CharField(max_length=20, choices=TIME_SLOTS, default='1:00 - 2:00')
 
     def __str__(self):
-        return f"{self.name} - {self.year} Year"
-
+        return f"{self.name} - {self.year} ({self.semester})"
 
 class TimeTable(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
-    timeslot = models.ForeignKey(Timeslot, on_delete=models.CASCADE)  # each subject can have multiple time slots
-    year_group = models.CharField(max_length=20, choices=[
-        ('1st Year', '1st Year'),
-        ('2nd Year', '2nd Year'),
-        ('3rd Year', '3rd Year'),
-        ('4th Year', '4th Year'), # final year 
-        ('Final Year', 'Final Year') # or this
-    ])
+    timeslot = models.ForeignKey(Timeslot, on_delete=models.CASCADE)
+    year_group = models.CharField(max_length=20, choices=YEAR_GROUPS)
+    semester = models.CharField(max_length=20, choices=SEMESTERS)
 
     def __str__(self):
-        return f"{self.department.name} - {self.subject.name} ({self.year_group}) - {self.timeslot}"
+        return f"{self.department.name} - {self.subject.name} ({self.year_group}, {self.semester}) - {self.timeslot}"
 
     class Meta:
-        unique_together = ('department', 'subject', 'timeslot', 'year_group')
+        unique_together = ('department', 'subject', 'timeslot', 'year_group', 'semester')

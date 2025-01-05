@@ -4,7 +4,13 @@
 <h1> Time Table Generator </h1>
 <h2> Profile </h2>
 
-<p  class="profile" id="capitalize" class="merge"> Welcome, <strong style="color: #da3682;">{{ user.username }}</strong> </p>
-<p class="profile" , class="merge"> Email: <strong style="color: #da3682;">{{ user.email }}</strong> </p>
+<div class="form-section">
+<p id="capitalize"> Welcome, <strong style="color: #da3682;">{{ user.username }} 🙂</strong> </p>
+<p> Email: <strong style="color: #da3682;">{{ user.email }}</strong> </p>
+<button class="button" onclick="location.href='/change_pas'"> wanna change password?? </button>
+<br> <br>
+<p style="font-size:x-small;"> hope you enjoy our app : ) </p>
+
+</div>
 
 {% endblock %}

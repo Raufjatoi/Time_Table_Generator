@@ -3,7 +3,11 @@ from django.contrib.auth import login, logout , authenticate
 from django.contrib.auth.decorators import login_required
 from .forms import TeacherForm, SubjectForm, DepartmentForm, TimeslotForm
 from .models import Teacher, Subject, Department, Timeslot, TimeTable
-from .logic import is_teacher_available, is_duration_fits
+from .logic import *
+from django.contrib.auth import update_session_auth_hash
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+
 
 from.forms import UserRegistrationForm , UserLoginForm
 def register(request):
@@ -52,54 +56,130 @@ def profile(request):
     return render(request , 'profile.html')
 
 def data_entry(request):
-    if request.method == "POST":
-        form_type = request.POST.get("form_type")
-        if form_type == "teacher":
-            form = TeacherForm(request.POST)
-        elif form_type == "subject":
-            form = SubjectForm(request.POST)
-        elif form_type == "department":
-            form = DepartmentForm(request.POST)
-        elif form_type == "timeslot":
-            form = TimeslotForm(request.POST)
+    return render(request , 'data_entry.html')
+
+def add_teacher(request):
+    if request.method == 'POST':
+        form = TeacherForm(request.POST)
+        if form.is_valid():
+            form.save()  # save the form data to the database
+            success_message = "Teacher added 👨‍🏫"
+            return redirect('data_entry' , {'success': success_message})  
         else:
-            form = None
+            error_message = "Form data is invalid. Please check your again"
+    else:
+        form = TeacherForm()
+        error_message = None  
 
-        if form and form.is_valid():
-            form.save()
-            return redirect("data_entry")
+    return render(request, 'add_teacher.html', {'form': form, 'error': error_message})
 
-    context = {
-        "teacher_form": TeacherForm(),
-        "subject_form": SubjectForm(),
-        "department_form": DepartmentForm(),
-        "timeslot_form": TimeslotForm(),
-    }
-    return render(request, "data_entry.html", context)
 
 def generate_timetable(request):
     if request.method == "POST":
-        # Generate the timetable based on the saved data
-        timetable = []
-        teachers = Teacher.objects.all()
-        subjects = Subject.objects.all()
-        timeslots = Timeslot.objects.all()
-        departments = Department.objects.all()
+        scheduler = TimetableScheduler(
+            departments=Department.objects.all(),
+            subjects=Subject.objects.all(),
+            teachers=Teacher.objects.all(),
+            timeslots=Timeslot.objects.all()
+        )
 
-        for teacher in teachers:
-            for subject in subjects.filter(teacher=teacher):
-                for timeslot in timeslots:
-                    if is_teacher_available(teacher, timeslot) and is_duration_fits(timeslot, subject):
-                        timetable.append(
-                            TimeTable.objects.create(
-                                subject=subject,
-                                department=departments.filter(subjects=subject).first(),
-                                timeslot=timeslot
-                            )
-                        )
-        return render(request, 'generate_success.html', {'timetable': timetable})
+        best_timetable = scheduler.generate_timetable()
+        timetable_objects = []
+
+        for department, subject, timeslot, teacher in best_timetable:
+            timetable_entry, created = TimeTable.objects.get_or_create(
+                subject=subject,
+                department=department,
+                timeslot=timeslot,
+                defaults={'teacher': teacher}
+            )
+            timetable_objects.append(timetable_entry)
+
+        return render(request, 'generate_success.html', {'timetable': timetable_objects})
 
     return render(request, 'g.html')
+
+
+def doc(request):
+    return render(request , 'doc.html')
+
+def works(request):
+    return render(request , 'works.html')
+
+def us(request):
+    return render(request , 'us.html')
+
+def add_subject(request):
+    if request.method == 'POST':
+        form = SubjectForm(request.POST)
+        if form.is_valid():
+            form.save()  # save the form data to the database
+            success_message = "Subject added 📕"
+            return HttpResponseRedirect(f"{reverse('data_entry')}?success={success_message}")
+        else:
+            error_message = "Form data is invalid. Please check your again"
+    else:
+        form = SubjectForm()
+        error_message = None  
+
+    return render(request, 'add_subject.html', {'form': form, 'error': error_message})
+
+
+def add_department(request):
+    if request.method == 'POST':
+        form = DepartmentForm(request.POST)
+        if form.is_valid():
+            form.save()  # save the form data to the database
+            success_message = "Department added 🏢"
+            return HttpResponseRedirect(f"{reverse('data_entry')}?success={success_message}")  
+        else:
+            error_message = "Form data is invalid. Please check your again"
+    else:
+        form = DepartmentForm()
+        error_message = None  
+
+    return render(request, 'add_department.html', {'form': form, 'error': error_message})
+
+
+def add_timeslot(request):
+    if request.method == 'POST':
+        form = TimeslotForm(request.POST)
+        if form.is_valid():
+            form.save()  # save the form data to the database
+            success_message = "timeslot added 🕒"
+            return HttpResponseRedirect(f"{reverse('data_entry')}?success={success_message}")
+        else:
+            error_message = "Form data is invalid. Please check your again"
+    else:
+        form = TimeslotForm()
+        error_message = None  
+
+    return render(request, 'add_timeslot.html', {'form': form, 'error': error_message})
+
+
+@login_required
+def change_password(request):
+    if request.method == "POST":
+        old_password = request.POST.get("old_password")
+        new_password = request.POST.get("new_password")
+        confirm_password = request.POST.get("confirm_password")
+
+        if new_password != confirm_password:
+            return render(request, 'change_password.html', {'error': "Passwords do not match :( "})
+        
+        user = request.user
+        if not user.check_password(old_password):
+            return render(request, 'change_password.html', {'error': "Old password is incorrect : ("})
+        
+        user.set_password(new_password)
+        user.save()
+
+        # Update session to prevent logout
+        update_session_auth_hash(request, user)
+        
+        return redirect('login') 
+    
+    return render(request, 'change_password.html')
 
 
 '''

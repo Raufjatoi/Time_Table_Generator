@@ -4,54 +4,21 @@
 <h1 style="color: grey;">Time Table Generator</h1>
 <h2> Data Entry </h2>
 
-    <div class="form-section">
-      <h2 class="form-heading">Add Teacher</h2>
-      <form method="post" class="form-container">
-        {% csrf_token %}
-        <input type="hidden" name="form_type" value="teacher">
-        <div class="form-group">
-          {{ teacher_form.as_p }}
-        </div>
-        <button type="submit" class="btn btn-primary">Save Teacher</button>
-      </form>
-    </div>
+{% if success %}
+  <p style="color: green;">{{ success }}</p>
+{% endif %}
+{% if error %}
+  <p style="color: red;">{{ error }}</p>
+{% endif %}
 
-    <!-- Add Subject Form -->
-    <div class="form-section">
-      <h2 class="form-heading">Add Subject</h2>
-      <form method="post" class="form-container">
-        {% csrf_token %}
-        <input type="hidden" name="form_type" value="subject">
-        <div class="form-group">
-          {{ subject_form.as_p }}
-        </div>
-        <button type="submit" class="btn btn-primary">Save Subject</button>
-      </form>
-    </div>
+<div class="form-section">
+<button class="button" onclick="location.href='/add_teacher'"> Add Teacher 👨‍🏫</button>
+<div style="margin-bottom: 10px;"></div>
+<button class="button" onclick="location.href='/add_subject'"> Add Subject 📕</button>
+<div style="margin-bottom: 10px;"></div>
+<button class="button" onclick="location.href='/add_department'"> Add Department 🏫</button>
+<div style="margin-bottom: 10px;"></div>
+<button class="button" onclick="location.href='/add_timeslot'"> Add Timeslots 📅</button>
+</div>
 
-    <!-- Add Department Form -->
-    <div class="form-section">
-      <h2 class="form-heading">Add Department</h2>
-      <form method="post" class="form-container">
-        {% csrf_token %}
-        <input type="hidden" name="form_type" value="department">
-        <div class="form-group">
-          {{ department_form.as_p }}
-        </div>
-        <button type="submit" class="btn btn-primary">Save Department</button>
-      </form>
-    </div>
-
-    <!-- Add Timeslot Form -->
-    <div class="form-section">
-      <h2 class="form-heading">Add Timeslot</h2>
-      <form method="post" class="form-container">
-        {% csrf_token %}
-        <input type="hidden" name="form_type" value="timeslot">
-        <div class="form-group">
-          {{ timeslot_form.as_p }}
-        </div>
-        <button type="submit" class="btn btn-primary">Save Timeslot</button>
-      </form>
-  </div>
 {% endblock %}
