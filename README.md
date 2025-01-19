@@ -24,7 +24,7 @@
 > **Features**:     
 > - Nice User Interface             
 > - SQLite Database for data       
-> - Other are in work        
+> - Groq LLM that generate the timetable logic        
 
 ---
 
@@ -32,6 +32,3 @@
 - **Django**: Python Web Framework  
 - **SQLite**: Lightweight database used in this project  
 - **Custom Styles**: Created custom CSS for the styles; I didn’t use Bootstrap or Materialize. However, feel free to rewrite the code using these frameworks if you prefer 😊.  
-
-
-
