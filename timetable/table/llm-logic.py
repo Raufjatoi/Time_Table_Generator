@@ -1,6 +1,7 @@
 #pip install langchain langchain python-dotenv
 
 import os
+import re
 from langchain_groq import ChatGroq
 from langchain.prompts import ChatPromptTemplate
 from dotenv import load_dotenv
@@ -86,4 +87,9 @@ data = {
 
 x = generator.invoke(data)
 
-print(x.content)
+pattern = r"(\w+)\s+\|\s+([\d:]+-[\d:]+)\s+\|\s+([a-zA-Z]+)"
+matches = re.findall(pattern, x.content)
+
+formatted_schedule = [{'day': day, 'time': time, 'subject': subject} for day, time, subject in matches]
+
+print(formatted_schedule)
