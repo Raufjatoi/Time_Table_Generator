@@ -1,5 +1,5 @@
 from .models import Teacher, Subject, Timeslot, Department, TimeTable
-from datetime import timedelta
+from datetime import timedelta , datetime
 import random
 
 class TimetableScheduler:
@@ -18,7 +18,10 @@ class TimetableScheduler:
             for department in self.departments:
                 for subject in department.major_subjects.all() | department.minor_subjects.all():
                     timeslot = random.choice(self.timeslots)
-                    teacher = random.choice(subject.assigned_teachers.all())
+                    teachers = list(subject.assigned_teachers.all())
+                    if not teachers:
+                        continue  # Skip if no teachers are assigned to the subject
+                    teacher = random.choice(teachers)
                     individual.append((department, subject, timeslot, teacher))
             population.append(individual)
         return population
@@ -55,8 +58,10 @@ class TimetableScheduler:
             if random.random() < mutation_rate:
                 department, subject, _, _ = individual[i]
                 timeslot = random.choice(self.timeslots)
-                teacher = random.choice(subject.assigned_teachers.all())
-                individual[i] = (department, subject, timeslot, teacher)
+                teachers = list(subject.assigned_teachers.all())
+                if teachers:
+                    teacher = random.choice(teachers)
+                    individual[i] = (department, subject, timeslot, teacher)
         return individual
 
     def select_parents(self, population):
@@ -78,27 +83,27 @@ class TimetableScheduler:
 
 
 def is_teacher_available(teacher, timeslot):
-    return not TimeTable.objects.filter(subject__teachers=teacher, timeslot=timeslot).exists()
+    return not TimeTable.objects.filter(subject__assigned_teachers=teacher, timeslot=timeslot).exists()
 
 def is_teacher_under_working_hours(teacher, timeslot):
-    total_working_minutes = int(teacher.working_hours) * 60
-    total_scheduled_minutes = sum(
-        timetable.subject.duration_per_lecture
-        for timetable in TimeTable.objects.filter(subject__teachers=teacher)
-    )
-    current_duration = (timeslot.end_time - timeslot.start_time).total_seconds() / 60
-    return total_scheduled_minutes + current_duration <= total_working_minutes
+    # Ensure timeslot times are converted to datetime objects
+    start_time = datetime.strptime(timeslot.start_time, "%H:%M")  # Adjust format if needed
+    end_time = datetime.strptime(timeslot.end_time, "%H:%M")
+
+    current_duration = (end_time - start_time).total_seconds() / 60
 
 def is_subject_under_lectures_per_week(subject):
-    total_lectures = TimeTable.objects.filter(subject=subject).count()
-    return total_lectures < subject.lectures_per_week
+    return TimeTable.objects.filter(subject=subject).count() < subject.lectures_per_week
+
 
 def is_duration_fits(timeslot, subject):
     current_duration = (timeslot.end_time - timeslot.start_time).total_seconds() / 60
     return current_duration >= subject.duration_per_lecture
 
+
 def is_department_available(department, timeslot):
     return not TimeTable.objects.filter(department=department, timeslot=timeslot).exists()
+
 
 def is_department_under_working_hours(department, timeslot):
     total_scheduled_minutes = sum(
@@ -109,18 +114,16 @@ def is_department_under_working_hours(department, timeslot):
     current_duration = (timeslot.end_time - timeslot.start_time).total_seconds() / 60
     return total_scheduled_minutes + current_duration <= department_hours
 
+
 def is_department_under_lectures_per_week(department, subject):
+    major_quota = department.total_lectures_per_week // 2
+    minor_quota = department.total_lectures_per_week // 2
+    
     total_major_lectures = TimeTable.objects.filter(department=department, subject__is_major=True).count()
     total_minor_lectures = TimeTable.objects.filter(department=department, subject__is_major=False).count()
-    if subject.is_major:
-        major_quota = department.total_lectures_per_week // 2
-        return total_major_lectures < major_quota
-    else:
-        minor_quota = department.total_lectures_per_week // 2
-        return total_minor_lectures < minor_quota
+    
+    return total_major_lectures < major_quota if subject.is_major else total_minor_lectures < minor_quota
+
 
 def is_subject_in_department(department, subject):
-    if subject.is_major:
-        return department.major_subjects.filter(pk=subject.pk).exists()
-    else:
-        return department.minor_subjects.filter(pk=subject.pk).exists()
+    return subject in department.major_subjects.all() if subject.is_major else subject in department.minor_subjects.all()

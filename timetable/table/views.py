@@ -64,7 +64,8 @@ def add_teacher(request):
         if form.is_valid():
             form.save()  # save the form data to the database
             success_message = "Teacher added 👨‍🏫"
-            return redirect('data_entry' , {'success': success_message})  
+            return redirect('data_entry')  # If no parameters needed
+  
         else:
             error_message = "Form data is invalid. Please check your again"
     else:
@@ -74,30 +75,44 @@ def add_teacher(request):
     return render(request, 'add_teacher.html', {'form': form, 'error': error_message})
 
 
+
 def generate_timetable(request):
-    if request.method == "POST":
-        scheduler = TimetableScheduler(
-            departments=Department.objects.all(),
-            subjects=Subject.objects.all(),
-            teachers=Teacher.objects.all(),
-            timeslots=Timeslot.objects.all()
-        )
+    timetable = {}
 
-        best_timetable = scheduler.generate_timetable()
-        timetable_objects = []
+    # Fetch all departments
+    for department in Department.objects.all():
+        department_timetable = []
 
-        for department, subject, timeslot, teacher in best_timetable:
-            timetable_entry, created = TimeTable.objects.get_or_create(
-                subject=subject,
-                department=department,
-                timeslot=timeslot,
-                defaults={'teacher': teacher}
-            )
-            timetable_objects.append(timetable_entry)
+        # Fetch all subjects
+        subjects = list(department.major_subjects.all()) + list(department.minor_subjects.all())
 
-        return render(request, 'generate_success.html', {'timetable': timetable_objects})
+        # Fetch available teachers
+        teachers = {subject: subject.assigned_teachers.all() for subject in subjects}
 
-    return render(request, 'g.html')
+        # Fetch available time slots
+        time_slots = Timeslot.objects.all()
+
+        slot_index = 0
+        for subject in subjects:
+            if slot_index >= len(time_slots):
+                break  # Stop if out of time slots
+            
+            timeslot = time_slots[slot_index]
+            slot_index += 1
+
+            # Assign a teacher (if available)
+            available_teachers = teachers.get(subject, [])
+            teacher = available_teachers[0] if available_teachers else "No Teacher"
+
+            department_timetable.append({
+                "timeslot": timeslot,
+                "subject": subject.name,
+                "teacher": teacher if teacher == "No Teacher" else teacher.name
+            })
+
+        timetable[department.name] = department_timetable
+
+    return render(request, 'timetable.html', {"timetable": timetable})
 
 
 def doc(request):

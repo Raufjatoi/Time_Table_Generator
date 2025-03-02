@@ -1,0 +1,201 @@
+p.profile, p.merge {
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+}
+
+/*
+.card-img-top {
+    object-fit: cover;
+    height: 150px;
+}
+
+.center-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    transform: translateY(-12%); /* Moves the card slightly upward */
+/*body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100vh;
+    cursor: none; 
+}*/
+
+#circle {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    border: 2px solid #3498db; 
+    border-radius: 50%;
+    pointer-events: none; 
+    transform: translate(-50%, -50%); 
+    transition: transform 0.15s ease-out;
+}
+
+#footer {
+    background-color: #f8f9fa;
+    color: #343a40;
+    padding: 8px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    font-size: 0.85rem;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#edges {
+    border-radius: 6px;
+    border: 2px solid #0d6efd;
+}
+.simple.navbar {
+    background-color: #f8f9fa;
+    color: #212529;
+    padding: 8px;
+    text-align: center;
+    font-size: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.error {
+    color: #dc3545; 
+}
+
+a {
+    text-transform: capitalize;
+    color: #0d6efd;
+    text-decoration: none;
+    transition: font-size 0.3s;
+}
+
+@media (max-width: 600px) {
+    .simple.navbar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+p {
+    color: gray;
+    text-align: center;
+}
+
+img {
+    width: 100px;
+    height: 100px;
+    border: 5px solid skyblue;
+    border-radius: 10px;
+}
+
+a:hover {
+    color: #0056b3;
+    text-decoration: none;
+    font-weight: bolder;
+    font-size: larger;
+}
+
+body {
+    background-color: #ffffff;
+    color: #212529;
+    font-family: "Roboto", sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+h2 {
+    color: rgb(32, 31, 31);
+    font-weight: 500;
+}
+
+h5.h {
+    border-radius: 6px;
+    border: 1px solid #d63384;  
+    color: #d63384;
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+h5 {
+    color: gray;
+    text-align: center;
+}
+
+#capitalize {
+    text-transform: capitalize;
+}
+
+.button {
+    border-radius: 6px;
+    border: 2px solid #0d6efd;
+    background-color: #ffffff;
+    color: #0d6efd;
+    padding: 10px 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.button:hover {
+    background-color: #0d6efd;
+    color: #ffffff;
+}
+
+.form-heading {
+    font-size: 1.8rem;
+    margin-bottom: 16px;
+    color: #0d6efd;
+}
+
+.form-section {
+    border-radius: 6px;
+    background-color: #f8f9fa;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 25px;
+    border: 1px solid #e0e0e0;
+}
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="number"],
+form input[type="time"],
+form input[type="password"],
+form select,
+form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: #f8f9fa;
+    color: #495057;
+}
+
+button[type="submit"] {
+    border-radius: 6px;
+    border: 2px solid #0d6efd;
+    background-color: #ffffff;
+    color: #0d6efd;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #0d6efd;
+    color: #ffffff;
+}
+
+br.space {
+    margin-top: 16px;
+}

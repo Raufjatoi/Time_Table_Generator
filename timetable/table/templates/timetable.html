@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="text-center">Generated Timetable</h1>
+
+        {% for department, schedule in timetable.items %}
+            <div class="card mt-4">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">{{ department }}</h2>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Timeslot</th>
+                                <th>Subject</th>
+                                <th>Teacher</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entry in schedule %}
+                                <tr>
+                                    <td>{{ entry.timeslot }}</td>
+                                    <td>{{ entry.subject }}</td>
+                                    <td>{{ entry.teacher }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
